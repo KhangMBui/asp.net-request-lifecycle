@@ -114,3 +114,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Makes the auto-generated Program class visible to WebApplicationFactory in functional tests
+public partial class Program { }

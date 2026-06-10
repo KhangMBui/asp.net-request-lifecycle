@@ -14,6 +14,7 @@
  */
 
 using TaskFlow.Api.DTOs;
+using TaskFlow.Api.Exceptions;
 using TaskFlow.Api.Models;
 using TaskFlow.Api.Repositories;
 
@@ -35,7 +36,9 @@ public class TaskService : ITaskService
 
     public TaskItem? GetById(int id)
     {
-        return _taskRepository.GetById(id);
+        var task = _taskRepository.GetById(id);
+        if (task == null) throw new NotFoundException($"Task {id} not found.");
+        return task;
     }
 
     public TaskItem Create(CreateTaskRequest request)
@@ -66,6 +69,8 @@ public class TaskService : ITaskService
 
     public bool Delete(int id)
     {
+        var task = _taskRepository.GetById(id);
+        if (task == null) throw new NotFoundException($"Task {id} not found.");
         return _taskRepository.Delete(id);
     }
 }

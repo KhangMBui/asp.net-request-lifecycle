@@ -18,6 +18,9 @@ on:
 #     Runs dotnet restore - downloads your NuGet packages
 # 4. Build project
 #     Compiles the project in Release mode, skipping restore since it's already done
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     name: Build ASP.NET Core project

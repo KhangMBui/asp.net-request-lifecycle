@@ -70,15 +70,6 @@ public class TaskController : ControllerBase
     public IActionResult GetById(int id)
     {
         var task = _taskService.GetById(id);
-
-        if (task == null)
-        {
-            return NotFound(new
-            {
-                message = $"Task with id {id} was not found."
-            });
-        }
-
         return Ok(task);
     }
 
@@ -132,15 +123,7 @@ public class TaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Delete(int id)
     {
-        var deleted = _taskService.Delete(id);
-
-        if (!deleted)
-        {
-            return NotFound(new
-            {
-                message = $"Task with id {id} was not found."
-            });
-        }
+        _taskService.Delete(id);
 
         return NoContent();
     }
