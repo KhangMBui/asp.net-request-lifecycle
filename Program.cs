@@ -90,6 +90,13 @@ builder.Services.AddScoped<ITaskService, TaskService>(); // Use AddSingleton if 
 
 var app = builder.Build();
 
+// Auto-apply migrations on startup so the DB schema exists when the container boots
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

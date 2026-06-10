@@ -48,3 +48,14 @@ jobs:
 
       - name: Run functional tests
         run: dotnet test tests/TaskFlow.Api.FunctionalTests --configuration Release --no-build --verbosity normal
+
+  docker:
+    name: Build Docker image
+    runs-on: ubunt-latest
+    needs: build-and-test # If build-and-test fails, Docker build never starts
+    steps:
+      - name: Checkout repository
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+      - run: docker build -t taskflow-api .
