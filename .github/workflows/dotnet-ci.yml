@@ -22,8 +22,8 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  build:
-    name: Build ASP.NET Core project
+  build-and-test:
+    name: Build and Test ASP.NET Core project
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -35,7 +35,16 @@ jobs:
           dotnet-version: "9.0.x"
 
       - name: Restore dependencies
-        run: dotnet restore TaskFlow.Api.csproj
+        run: dotnet restore TaskFlow.sln
 
-      - name: Build project
-        run: dotnet build TaskFlow.Api.csproj --configuration Release --no-restore
+      - name: Build solution
+        run: dotnet build TaskFlow.sln --configuration Release --no-restore
+
+      - name: Run unit tests
+        run: dotnet test tests/TaskFlow.Api.UnitTests --configuration Release --no-build --verbosity normal
+
+      - name: Run integration tests
+        run: dotnet test tests/TaskFlow.Api.IntegrationTests --configuration Release --no-build --verbosity normal
+
+      - name: Run functional tests
+        run: dotnet test tests/TaskFlow.Api.FunctionalTests --configuration Release --no-build --verbosity normal
