@@ -1,0 +1,38 @@
+name: .NET CI
+
+# Run this workflow ehenever someone pushes to main, or opens/updates a PR targeting main
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A job is a box of steps that runs together on a machine
+# Here, we have a job called 'build,' and it runs on fresh Ubuntu Linux VM that GitHub spins up for us automatically
+# The 4 steps inside the job:
+# 1. Checkout repository
+#     Downloads your code onto that Ubuntu machine - like git clone
+# 2. Setup .NET 9 SDK
+#     Installs .NET 9 so the machine can understand C#
+# 3. Restore dependensies
+#     Runs dotnet restore - downloads your NuGet packages
+# 4. Build project
+#     Compiles the project in Release mode, skipping restore since it's already done
+jobs:
+  build:
+    name: Build ASP.NET Core project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 9 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore TaskFlow.Api.csproj
+
+      - name: Build project
+        run: dotnet build TaskFlow.Api.csproj --configuration Release --no-restore
